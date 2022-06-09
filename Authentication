@@ -1,0 +1,74 @@
+* Authentication is the process of verifying the identity of a given user or client
+## Difference between authentication and authorization:
+Authentication is the process of verifying that a user really is who they claim to be.
+Authorization involves verifying whether a user is allowed to do something.
+How do authentication vulnerabilities arise?
+Lack of adequate protect against brute-force attacks
+Broken Authentication- Authentication bypass due to logic flaws
+Vulnerabilities in authentication mechanisms
+Vulnerabilities in password-based login
+1. Brute-force attacks
+Trial and error to guess valid user credentials
+Username enumeration- An attacker is able to observe changes in the website's behavior in order to identify whether a given username is valid.
+Status Codes
+Error messages
+Response times
+Flawed brute-force protection
+IP based blocking if too many failures
+In some implementations, the counter for the number of failed attempts resets if the IP owner logs in successfully
+This means an attacker would simply have to log in to their own account every few attempts to prevent this limit from ever being reached
+Account locking
+Lock the account after a number of failed login attempts
+Fails against credential stuffing attack
+User rate limiting
+Causes IP address to be blocked
+Less prone to credential stuffing attack
+2. HTTP Basic Authentication
+The client receives an authentication token from the server, which is constructed by concatenating the username and password, and encoding it in Base64
+Browser adds this token to the Authorization header of every subsequent requests:
+Authorization: Basic base64(username:password)
+
+Vulnerable to:
+Man-in-the-middle attacks, if HSTS is not implemented
+Brute-force attacks, as the token is static
+CSRF attacks
+Vulnerabilities in MFA
+Based on something you know and something you have
+Verifying the same factor in two different ways is not true two-factor authentication. Email-based 2FA is one such example. Although the user has to provide a password and a verification code, accessing the code only relies on them knowing the login credentials for their email account. Therefore, the knowledge authentication factor is simply being verified twice.
+SMS based 2FA- Risk of interception, SIM swapping
+1. Bypassing 2FA
+*If the user is first prompted to enter a password, and then prompted to enter a verification code on a separate page, the user is effectively in a "logged in" state before they have entered the verification code. *It might be possible to directly skip to "logged-in only" pages after completing the first authentication step
+
+2. Flawed two-factor verification logic
+The website doesn't adequately verify that the same user is completing the second step.
+Dangerous if the attacker is able to brute-force the verification code as it would allow them to log in to arbitrary users' accounts based entirely on their username (if username is used to identify the account during second step of 2FA)
+3. Brute-forcing 2FA verification codes
+IP based brute-force protection can be bypassed by creating macros or using Turbo Intruder in Burp
+Vulnerabilities in other authentication mechanisms
+Keeping users logged in
+Option to stay logged in even after closing a browser session
+Often implemented by generating a "remember me" token of some kind, which is then stored in a persistent cookie.
+Vulnerable if this cookie is static and guessable
+XSS attacks can also be used to steal another user's 'remember me' cookie and deduce how the cookie is constructed
+Offline Password cracking
+Vulnerable if salt is not used in password hash creation
+Rainbow table attack
+Resetting user passwords
+Sending passwords by email
+Do not send current password via email
+If new password is sent over an email, the security depends on the following factors and may be still susceptible to MITM attacks:
+Generated password expiring after a very short period
+User changing their password again immediately Hence sending new password over an email should also be avoided
+Resetting passwords using a URL
+A more robust method
+Send a unique URL to users that take them to a password reset
+Generate a high-entropy, hard-to-guess token and create the reset URL based on that
+Vulnerable if:
+An easily guessable parameter is used (such as username) to identify which account is being reset
+Fails to validate the token again when the reset form is submitted.
+May also be vulnerable to password reset poisoning attack
+Changing user passwords
+Dangerous if it allows an attacker to access it directly without being logged in as the victim user
+For example, if the username is provided in a hidden field, an attacker might be able to edit this value in the request to target arbitrary users.
+This can potentially be exploited to enumerate usernames and brute-force passwords.
+OAuth 2.0 authentication vulnerabilities
