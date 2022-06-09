@@ -1,4 +1,4 @@
-* Authentication is the process of verifying the identity of a given user or client
+- Authentication is the process of verifying the identity of a given user or client
 ## Difference between authentication and authorization:
 Authentication is the process of verifying that a user really is who they claim to be.
 Authorization involves verifying whether a user is allowed to do something.
